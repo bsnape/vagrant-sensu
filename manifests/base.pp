@@ -42,7 +42,12 @@ node 'sensu-server' {
     server            => true,
     dashboard         => true,
     api               => true,
-    require           => [Class['::rabbitmq'], Class['::redis']]
+    require           => [Class['::rabbitmq'], Class['::redis'], Package['sensu-plugin']],
+  }
+
+  package { 'sensu-plugin':
+    ensure   => 'installed',
+    provider => 'gem',
   }
 
 }
@@ -55,6 +60,12 @@ node 'sensu-client' {
     rabbitmq_host     => '33.33.33.90',
     rabbitmq_port     => '5672',
     subscriptions     => 'sensu-test',
+    require           => Package['sensu-plugin']
+  }
+
+  package { 'sensu-plugin':
+    ensure   => 'installed',
+    provider => 'gem',
   }
 
 }

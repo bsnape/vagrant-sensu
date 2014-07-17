@@ -1,6 +1,6 @@
 node 'sensu-server' {
 
-  class { 'erlang':
+  class { '::erlang':
     epel_enable => true
   }
 
@@ -9,6 +9,7 @@ node 'sensu-server' {
   }
 
   class { '::rabbitmq':
+    require               => Class['::erlang'],
     environment_variables => {
     'RABBITMQ_NODENAME' => 'rabbit',
     'HOME'              => '/var/lib/rabbitmq',

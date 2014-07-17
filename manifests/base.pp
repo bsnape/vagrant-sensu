@@ -38,7 +38,7 @@ node 'sensu-server' {
     rabbitmq_password => 'password',
     rabbitmq_host     => 'sensu-server',
     rabbitmq_port     => '5672',
-    subscriptions     => 'sensu-test',
+    client            => false,
     server            => true,
     dashboard         => true,
     api               => true,

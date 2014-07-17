@@ -24,7 +24,7 @@ node 'sensu-server' {
   rabbitmq_user { 'sensu':
     password => 'password',
     admin    => true,
-    require  =>  Class['::rabbitmq']
+    require  => Class['::rabbitmq']
   }
 
   rabbitmq_user_permissions { 'sensu@/sensu':

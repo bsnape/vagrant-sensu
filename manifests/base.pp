@@ -45,6 +45,25 @@ node 'sensu-server' {
     require           => [Class['::rabbitmq'], Class['::redis'], Package['sensu-plugin']],
   }
 
+  sensu::check { 'check_crond_alive':
+    command     => '/etc/sensu/plugins/check-procs.rb -p crond -W 1',
+    handlers    => 'default',
+    subscribers => 'sensu-test',
+    interval    => 5,
+    standalone  => false,
+  }
+
+  sensu::handler { 'default':
+    type     => 'set',
+    command  => 'true',
+    handlers => 'log_event',
+  }
+
+  sensu::handler { 'log_event':
+    type   => 'pipe',
+    source => 'puppet:///modules/data/handlers/logevent.rb',
+  }
+
   package { 'sensu-plugin':
     ensure   => 'installed',
     provider => 'gem',
@@ -60,6 +79,7 @@ node 'sensu-client' {
     rabbitmq_host     => '33.33.33.90',
     rabbitmq_port     => '5672',
     subscriptions     => 'sensu-test',
+    plugins           => ['puppet:///modules/data/plugins/check-procs.rb'],
     require           => Package['sensu-plugin']
   }
 

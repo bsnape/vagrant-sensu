@@ -1,12 +1,15 @@
 # Vagrant Sensu (Sandbox)
 
-A ready to go Centos 6.5 Sensu client/server VM's with all dependencies.
+Ready to go Sensu client/server VM's (Centos 6.5) with all dependencies.
 
 ## Pre-requisites
 
-- Vagrant
-- VirtualBox
-- Ruby / Bundler
+You'll need the following installed on your system. The versions are provided in parentheses for info but there shouldn't be any problems with earlier versions of things.
+
+- Vagrant (1.5.1, 1.6.3 both confirmed working)
+- VirtualBox (4.3.8, 4.3.12 both confirmed working)
+- Ruby (2.1.0 confirmed working, >= 1.9.3 should be fine)
+- Bundler (1.5.2 confirmed working) 
 
 ## Usage
 

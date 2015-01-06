@@ -16,7 +16,7 @@ node 'sensu-server' {
     }
   }
 
-  rabbitmq_vhost { '/sensu':
+  rabbitmq_vhost { 'sensu':
     ensure  => present,
     require =>  Class['::rabbitmq']
   }
@@ -27,7 +27,7 @@ node 'sensu-server' {
     require  => Class['::rabbitmq']
   }
 
-  rabbitmq_user_permissions { 'sensu@/sensu':
+  rabbitmq_user_permissions { 'sensu@sensu':
     configure_permission => '.*',
     read_permission      => '.*',
     write_permission     => '.*',
@@ -35,16 +35,14 @@ node 'sensu-server' {
   }
 
   class { 'sensu':
-    rabbitmq_password  => 'password',
-    rabbitmq_host      => 'sensu-server',
-    rabbitmq_port      => '5672',
-    client             => false,
-    server             => true,
-    dashboard          => true,
-    api                => true,
-    dashboard_user     => '',
-    dashboard_password => '',
-    require            => [Class['::rabbitmq'], Class['::redis'], Package['sensu-plugin']],
+    version           => 'latest',
+    rabbitmq_password => 'password',
+    rabbitmq_host     => 'sensu-server',
+    install_repo      => false,
+    server            => true,
+    api               => true,
+    client            => false,
+    require           => [Class['::rabbitmq'], Class['::redis']],
   }
 
   sensu::check { 'check_crond_alive':
@@ -66,9 +64,20 @@ node 'sensu-server' {
     source => 'puppet:///modules/data/handlers/logevent.rb',
   }
 
-  package { 'sensu-plugin':
-    ensure   => 'installed',
-    provider => 'gem',
+  $uchiwa_api_config = [{
+    host         => '127.0.0.1',
+    install_repo => true,
+    ssl          => false,
+    insecure     => true,
+    port         => 4567,
+    user         => '',
+    pass         => '',
+    path         => '',
+    timeout      => 5
+  }]
+
+  class { 'uchiwa':
+    sensu_api_endpoints => $uchiwa_api_config,
   }
 
 }
@@ -79,15 +88,9 @@ node 'sensu-client' {
   class { 'sensu':
     rabbitmq_password => 'password',
     rabbitmq_host     => '33.33.33.90',
-    rabbitmq_port     => '5672',
     subscriptions     => 'sensu-test',
-    plugins           => ['puppet:///modules/data/plugins/check-procs.rb'],
-    require           => Package['sensu-plugin']
-  }
-
-  package { 'sensu-plugin':
-    ensure   => 'installed',
-    provider => 'gem',
+    use_embedded_ruby => true,
+    plugins           => ['puppet:///modules/data/plugins/check-procs.rb']
   }
 
 }

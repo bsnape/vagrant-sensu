@@ -35,7 +35,7 @@ node 'sensu-server' {
   }
 
   class { 'sensu':
-    version           => 'latest',
+    version           => '0.16.0-1',
     rabbitmq_password => 'password',
     rabbitmq_host     => 'sensu-server',
     install_repo      => false,
@@ -77,6 +77,7 @@ node 'sensu-server' {
   }]
 
   class { 'uchiwa':
+    version             => '0.4.0-1',
     sensu_api_endpoints => $uchiwa_api_config,
   }
 

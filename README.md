@@ -2,8 +2,8 @@
 
 Ready to go Sensu client/server VMs (Centos 6.5) with all dependencies.
 
-Sensu is pinned to version: `0.16.0-1`.
-Uchiwa (Sensu GUI) is pinned to version: `0.4.0-1`.
+- Sensu is pinned to version: `0.16.0-1`.
+- Uchiwa (Sensu GUI) is pinned to version: `0.4.0-1`.
 
 ## Pre-requisites
 
